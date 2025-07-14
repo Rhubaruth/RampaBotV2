@@ -1,7 +1,7 @@
 import aiohttp
 
-from Database import headers_config, ssl_config
-from envLoad import URL_REST_API
+from databaseApi import headers_config, ssl_config
+from loadEnv import URL_REST_API
 
 # TODO: refactor -- create helper functoin for api calls
 
@@ -26,8 +26,9 @@ async def select_user_by_id(id: int):
     async with aiohttp.ClientSession(connector=ssl_config()) as session:
         async with session.get(f"{URL_REST_API}Users/GetById/{id}",
                                headers=headers_config()) as response:
-            print('users.py (by_id): ', response)
+            # print('users.py (by_id): ', response)
             response_json = await response.json()
+            # print(response_json)
     return response_json
 
 
@@ -53,5 +54,5 @@ async def update_user_by_id(id_user: int, data):
         async with session.put(f"{URL_REST_API}Users/Update/{id_user}",
                                headers=headers_config(), json=data) as response:
             print('users.py (update): ', response)
-            response_json = response
+            response_json = await response.json()
     return response_json

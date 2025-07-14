@@ -1,7 +1,7 @@
 import aiohttp
 
-from Database import ssl_config, headers_config
-from envLoad import URL_REST_API
+from databaseApi import ssl_config, headers_config
+from loadEnv import URL_REST_API
 
 
 async def select_svatek_count(name):

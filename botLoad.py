@@ -23,7 +23,7 @@ async def sync(ctx: commands.Context):
 @bot.event
 async def on_ready():
     # Load cogs
-    # await bot.load_extension("cogs.<filename>")
+    await bot.load_extension("cogs.UserCalendar")
 
     # Sync commands
     await bot.tree.sync()

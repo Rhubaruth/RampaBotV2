@@ -2,8 +2,8 @@ from discord import Interaction
 from discord.ext import commands
 from discord import app_commands
 
-from userCalendar import jmeniny
-from userCalendar.jmeniny import JmeninyError
+from cogs.userCalendar import jmeniny
+from cogs.userCalendar.jmeniny import JmeninyError
 
 
 class UserCalendarCog(commands.Cog):
@@ -24,20 +24,20 @@ class UserCalendarCog(commands.Cog):
     async def jmeniny(self, interaction: Interaction, name: str):
         user = interaction.user
         try:
-            result, arg = jmeniny.set_jmeniny(user, name)
+            result, arg = await jmeniny.set_jmeniny(user, name)
         except Exception as e:
             result = None
-            # TODO - send PM to @Rhubaruth
             await interaction.response.send_message(
-                "Chyba při komunikaci s API.",
-                ephemeral=False
+                f"Chyba při komunikaci s API. ({e})",
+                ephemeral=True
             )
+            # TODO - send PM to @Rhubaruth
             print("Error - jmeniny@UserCalendar.py:")
-            print(e)
+            print('\t', e)
             return
         message = ""
         if result is JmeninyError.OK:
-            message = f"Jméno {user.mention} bylo nastaveno na **{name}**."
+            message = f"Jméno {user.mention} bylo nastaveno na **{arg}**."
         elif result is JmeninyError.AlreadySet:
             message = f"Jméno {user.mention} už je nastaveno na **{arg}**."
         elif result is JmeninyError.NameNotFound:
@@ -45,6 +45,7 @@ class UserCalendarCog(commands.Cog):
         else:
             message = f"Nastala chyba [JmeninyError.{result}]"
             # TODO - send PM to @Rhubaruth
+            print("jmeniny@UserCalendar.py: ", {arg})
         await interaction.response.send_message(
             message,
             ephemeral=True

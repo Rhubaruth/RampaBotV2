@@ -1,7 +1,7 @@
 import aiohttp
 
-from Database import headers_config, ssl_config
-from envLoad import URL_REST_API
+from databaseApi import headers_config, ssl_config
+from loadEnv import URL_REST_API
 
 '''
 GET->

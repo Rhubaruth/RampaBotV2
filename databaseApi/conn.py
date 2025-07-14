@@ -2,7 +2,7 @@ import ssl
 
 import aiohttp
 
-from envLoad import *
+from loadEnv import REST_API_KEY
 
 
 def ssl_config():
