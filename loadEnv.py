@@ -1,16 +1,15 @@
 import os
 from dotenv import load_dotenv
 
-env_path = "./.env"
+env_path = ".env"
 
 URL_REST_API = ""
 REST_API_KEY = ""
 
 
 def load_env():
-    if os.path.exists(env_path):
-        result = load_dotenv(env_path)
-        print(f"dotenv loading result: {result}")
+    result = load_dotenv(env_path)
+    print(f"{env_path} loading result: {result}")
 
 
 def load_rest_api():
