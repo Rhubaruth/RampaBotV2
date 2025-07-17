@@ -3,12 +3,14 @@ from loadEnv import (
     get_discord_token,
     load_rest_api,
 )
-from botLoad import bot
+from botLoad import create_bot
+
+bot = None
 
 if __name__ == "__main__":
     load_env()
+    bot = create_bot()
 
     DC_TOKEN = get_discord_token()
-    print(len(DC_TOKEN))
     load_rest_api()
     bot.run(DC_TOKEN)
