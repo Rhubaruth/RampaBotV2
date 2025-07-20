@@ -32,8 +32,7 @@ class UserCalendarCog(commands.Cog):
                 ephemeral=True
             )
             # TODO - send PM to @Rhubaruth
-            print("Error - jmeniny@UserCalendar.py:")
-            print('\t', e)
+            print("[Error] jmeniny@UserCalendar.py: ", {e})
             return
         message = ""
         if result is JmeninyError.OK:
@@ -45,7 +44,7 @@ class UserCalendarCog(commands.Cog):
         else:
             message = f"Nastala chyba [JmeninyError.{result}]"
             # TODO - send PM to @Rhubaruth
-            print("jmeniny@UserCalendar.py: ", {arg})
+            print("[Error] jmeniny@UserCalendar.py: ", {arg})
         await interaction.response.send_message(
             message,
             ephemeral=True
