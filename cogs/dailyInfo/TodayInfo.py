@@ -1,9 +1,9 @@
 from datetime import date
 
 from databaseApi import (
-    select_date_by_day_month_jmeno,
-    select_date_by_day_month_svatek,
-    select_date_by_day_month_fakt,
+    select_nameday_by_daymonth,
+    select_holiday_by_daymonth,
+    select_fact_by_daymonth,
     # select_user_by_name,
     # select_narozky_by_day_month,
 )
@@ -46,13 +46,13 @@ class TodayInfo:
         # get info about today from DB
         self.error = ""
         try:
-            today_names = await select_date_by_day_month_jmeno(
+            today_names = await select_nameday_by_daymonth(
                 date.day, date.month
             )
-            today_holidays = await select_date_by_day_month_svatek(
+            today_holidays = await select_holiday_by_daymonth(
                 date.day, date.month
             )
-            today_facts = await select_date_by_day_month_fakt(
+            today_facts = await select_fact_by_daymonth(
                 date.day, date.month
             )
         except Exception as e:

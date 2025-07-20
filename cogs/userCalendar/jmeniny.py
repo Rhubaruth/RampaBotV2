@@ -1,7 +1,7 @@
 from discord import Member
 from enum import Enum
 
-from databaseApi import select_user_by_id, select_date_by_name, \
+from databaseApi import select_user_by_id, select_daymonth_by_nameday, \
     insert_user, update_user_by_id
 
 
@@ -16,14 +16,14 @@ class JmeninyError(Enum):
 async def set_jmeniny(
     user: Member,
     name: str,
-) -> (JmeninyError, str):
+) -> tuple[JmeninyError, str]:
     db_entry = await select_user_by_id(user.id)
 
     if "first_Name" in db_entry:
         if db_entry["first_Name"] is not None:
             return JmeninyError.AlreadySet, db_entry["first_Name"]
 
-    result = await select_date_by_name(name)
+    result = await select_daymonth_by_nameday(name)
     if "status" in result:
         return JmeninyError.NameNotFound, name
 

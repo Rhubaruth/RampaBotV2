@@ -62,8 +62,6 @@ class DailyInfoCog(commands.Cog):
     @tasks.loop(time=MIDNIGHT_TIME)
     async def at_midnight(self):
         datetime_now = dt.datetime.now(CZECH_TIMEZONE)
-        # Debug - set specific day
-        datetime_now = dt.datetime(2025, 8, 14, 18, 00, tzinfo=CZECH_TIMEZONE)
         await self.Info.set_date(datetime_now.date())
 
     @tasks.loop(time=MORNING_TIME)

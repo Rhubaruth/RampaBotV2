@@ -16,7 +16,11 @@ GET->
 '''
 
 
-async def select_date_by_name(first_name: str):  # vybere zvolene jmeno z kalendare, vysledek vraci jako list
+async def select_daymonth_by_nameday(first_name: str):
+    """
+    Najde datum(day, month) podle jména.
+    Vrací list.
+    """
     async with aiohttp.ClientSession(connector=ssl_config()) as session:
         async with session.get(f"{URL_REST_API}Kalendars/GetByName/{first_name}",
                                headers=headers_config()) as response:
@@ -24,7 +28,11 @@ async def select_date_by_name(first_name: str):  # vybere zvolene jmeno z kalend
     return response_json
 
 
-async def select_date_by_day_month_jmeno(day, month):  # vybere zvoleny den v kalendari, vysledek vraci jako list
+async def select_nameday_by_daymonth(day, month):
+    """
+    Najde jména(nameday) podle data.
+    Vrací list.
+    """
     async with aiohttp.ClientSession(connector=ssl_config()) as session:
         async with session.get(f"{URL_REST_API}Kalendars/GetByDate/{day},{month}",
                                headers=headers_config()) as response:
@@ -32,7 +40,11 @@ async def select_date_by_day_month_jmeno(day, month):  # vybere zvoleny den v ka
     return response_json
 
 
-async def select_date_by_day_month_svatek(day, month):  # vybere zvoleny den v kalendari, vysledek vraci jako list
+async def select_holiday_by_daymonth(day, month):
+    """
+    Najde svatek(holiday) podle data.
+    Vrací list.
+    """
     async with aiohttp.ClientSession(connector=ssl_config()) as session:
         async with session.get(f"{URL_REST_API}Kalendars/SvatekGetByDate/{day},{month}",
                                headers=headers_config()) as response:
@@ -40,7 +52,11 @@ async def select_date_by_day_month_svatek(day, month):  # vybere zvoleny den v k
     return response_json
 
 
-async def select_date_by_day_month_fakt(day, month):  # vybere zvoleny den v kalendari, vysledek vraci jako list
+async def select_fact_by_daymonth(day, month):
+    """
+    Najde fakt(fact) podle data.
+    Vrací list.
+    """
     async with aiohttp.ClientSession(connector=ssl_config()) as session:
         async with session.get(f"{URL_REST_API}Kalendars/FaktGetByDate/{day},{month}",
                                headers=headers_config()) as response:

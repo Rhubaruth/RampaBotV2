@@ -7,7 +7,7 @@ from loadEnv import URL_REST_API
 # -- wrapper_get & wrapper_post
 
 
-async def select_user_alle():
+async def select_user_all():
     async with aiohttp.ClientSession(connector=ssl_config()) as session:
         async with session.get(f"{URL_REST_API}Users/All",
                                headers=headers_config()) as response:
@@ -31,7 +31,7 @@ async def select_user_by_id(id: int):
     return response_json
 
 
-async def select_narozky_by_day_month(day, month):
+async def select_user_by_daymonth(day, month):
     async with aiohttp.ClientSession(connector=ssl_config()) as session:
         async with session.get(f"{URL_REST_API}Users/GetByDate/{day},{month}",
                                headers=headers_config()) as response:

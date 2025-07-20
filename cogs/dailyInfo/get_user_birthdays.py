@@ -1,13 +1,13 @@
 from datetime import date
 
 from databaseApi import (
-    select_narozky_by_day_month
+    select_user_by_daymonth
 )
 
 
 async def get_user_birthdays(date: date):
     try:
-        today_birthdays = await select_narozky_by_day_month(
+        today_birthdays = await select_user_by_daymonth(
             date.day, date.month
         )
         if "status" in today_birthdays:
