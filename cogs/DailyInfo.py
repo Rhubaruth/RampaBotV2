@@ -66,9 +66,6 @@ class DailyInfoCog(commands.Cog):
         datetime_now = dt.datetime(2025, 8, 14, 18, 00, tzinfo=CZECH_TIMEZONE)
         await self.Info.set_date(datetime_now.date())
 
-        # TODO - add Tournament Stuff
-        pass
-
     @tasks.loop(time=MORNING_TIME)
     async def at_morning(self):
 
