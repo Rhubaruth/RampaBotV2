@@ -6,7 +6,6 @@ from loadEnv import MODERATOR_ROLES
 
 from discord import Client, TextChannel
 from discord.ext import commands, tasks
-from helperFunction import concat_list
 
 # časy, ve kterých se daný task zapne
 MIDNIGHT_TIME = dt.time(hour=0, minute=15, tzinfo=CZECH_TIMEZONE)
@@ -47,7 +46,6 @@ class DailyInfoCog(commands.Cog):
 
         # Load today's date
         await self.at_midnight()
-        await self.at_morning()
 
         # for Debugg
         print(self.Info.print())
@@ -66,40 +64,35 @@ class DailyInfoCog(commands.Cog):
 
     @tasks.loop(time=MORNING_TIME)
     async def at_morning(self):
+        message = self.Info.get_morning_message()
 
-        names = concat_list(
-            list(map(lambda x: f"**{x}**", self.Info.names))
-        )
-
-        message = "Cuc lidové! :meowdy:\n"
-        message += f"Dnes je **{self.Info.current_date}**"
-        if names:
-            message += f" a svátek má {names}"
-        message += ".\n"
-        if self.Info.birthday_ids:
-            bday_mentions = concat_list(
-                list(map(lambda x: f"<@{x}>", self.Info.birthday_ids))
-            )
-            message += f"Všechno nejlepší k narozeninám: {bday_mentions}!\n"
-        if self.Info.nameday_ids:
-            nday_mentions = concat_list(
-                list(map(lambda x: f"<@{x}>", self.Info.nameday_ids))
-            )
-            message += f"Svátek mají lidové {nday_mentions}.\n"
-
-        print(message)
+        if len(message) > 1:
+            await self.main_channel.send(message)
         return message
 
     @tasks.loop(time=EVENING_TIME)
     async def at_evening(self):
-        pass
+        message = self.Info.get_evening_message()
+
+        if len(message) > 1:
+            await self.main_channel.send(message)
+        return message
 
     @commands.command(name="morning")
     @commands.has_any_role(*MODERATOR_ROLES)
     async def test_morning(self, ctx: commands.Context):
         await ctx.message.delete()
         message = await self.at_morning()
-        await ctx.send(message)
+        print(message)
+        # await ctx.send(message)
+
+    @commands.command(name="evening")
+    @commands.has_any_role(*MODERATOR_ROLES)
+    async def test_evening(self, ctx: commands.Context):
+        await ctx.message.delete()
+        message = await self.at_evening()
+        print(message)
+        # await ctx.send(message)
 
     @commands.command(name="print_info")
     @commands.has_any_role(*MODERATOR_ROLES)
