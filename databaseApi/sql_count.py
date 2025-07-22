@@ -1,20 +1,13 @@
-import aiohttp
-
-from databaseApi import ssl_config, headers_config
-from loadEnv import URL_REST_API
+from databaseApi import wrappers
 
 
 async def select_svatek_count(name):
-    async with aiohttp.ClientSession(connector=ssl_config()) as session:
-        async with session.get(f"{URL_REST_API}Users/GetByNameCount/{name}",
-                               headers=headers_config()) as response:
-            response_json = await response.json()
+    url = f"Users/GetByNameCount/{name}"
+    response_json = await wrappers.get_async(url)
     return response_json
 
 
 async def select_narozky_count(day, month):
-    async with aiohttp.ClientSession(connector=ssl_config()) as session:
-        async with session.get(f"{URL_REST_API}Users/GetByDateCount/{day},{month}",
-                               headers=headers_config()) as response:
-            response_json = await response.json()
+    url = f"Users/GetByDateCount/{day},{month}"
+    response_json = await wrappers.get_async(url)
     return response_json

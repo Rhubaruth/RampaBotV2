@@ -27,18 +27,21 @@ async def set_jmeniny(
     if "status" in result:
         return JmeninyError.NameNotFound, name
 
+    data = {
+        "id": user.id,
+        "first_Name": name,
+        "dc_name": user.global_name,
+    }
     if "first_Name" in db_entry:
-        data = {"id": user.id, "first_Name": name}
         result = await update_user_by_id(user.id, data)
         if "status" in result:
             if result['status'] == '200':
                 return JmeninyError.OK, name
-        return JmeninyError.InsertError, str(result)
+        return JmeninyError.UpdateError, str(result)
     else:
-        data = {"id": user.id, "first_Name": name}
         result = await insert_user(data)
         if "status" in result:
             if result['status'] == '200':
                 return JmeninyError.OK, name
-        return JmeninyError.UpdateError, str(result)
+        return JmeninyError.InsertError, str(result)
     return JmeninyError.OK, name
