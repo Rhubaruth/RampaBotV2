@@ -4,25 +4,29 @@ from databaseApi import (
     select_nameday_by_daymonth,
     select_holiday_by_daymonth,
     select_fact_by_daymonth,
-    # select_user_by_name,
-    # select_narozky_by_day_month,
+    select_beauty_today
 )
 from cogs.dailyInfo.get_user_birthdays import get_user_birthdays
 from cogs.dailyInfo.get_user_namedays import get_user_namedays
-from helperFunction import concat_list
+from helperFunction import concat_list, extract_column
+
+from typing import Union
+from discord import Member, Guild
 
 
 class TodayInfo:
-    def __init__(self):
+    def __init__(self, guild: Union[Guild, None]):
+        self.guild: Guild = guild
         self.current_date: date
 
         self.error = ""
 
+        self.beauty_members: list[Member] = []
         self.names: list[str] = []
         self.holidays: list[str] = []
         self.facts: list[str] = []
-        self.birthday_ids: list[str] = []
-        self.nameday_ids: list[str] = []
+        self.birthday_ids: list[int] = []
+        self.nameday_ids: list[int] = []
 
     async def set_date(self, new_date: date):
         self.current_date = new_date
@@ -39,14 +43,25 @@ class TodayInfo:
             f"birthdays: {self.birthday_ids}\n" +
             f"namedays: {self.nameday_ids}\n" +
             "\n" +
+            f"beaty: {self.beauty_members}\n" +
+            "\n" +
             f"error: {self.error}\n"
         )
         return mess
+
+    async def _get_member(self, member_id: int):
+        if self.guild is None:
+            print(f"[VALUE-ERROR] TodayInfo._get_member({member_id})", end=' ')
+            print("- self.guild is None")
+            return
+
+        return await self.guild.fetch_member(member_id)
 
     async def generate_data(self, date: date):
         # get info about today from DB
         self.error = ""
         try:
+            today_beauty = await select_beauty_today()
             today_names = await select_nameday_by_daymonth(
                 date.day, date.month
             )
@@ -61,14 +76,14 @@ class TodayInfo:
             self.error = e
             return
 
-        print(today_holidays)
+        self.names = extract_column('jmeno', today_names)
+        self.holidays = extract_column('svatek', today_holidays)
+        self.facts = extract_column('fakt', today_facts)
 
-        self.names = [row["jmeno"]
-                      for row in today_names if row["jmeno"] is not None]
-        self.holidays = [row["svatek"]
-                         for row in today_holidays if row["svatek"] is not None]
-        self.facts = [row["fakt"]
-                      for row in today_facts if row["fakt"] is not None]
+        beauty_ids = extract_column('id', today_beauty)
+        self.beauty_members = [
+            await self._get_member(i) for i in beauty_ids
+        ]
 
         self.birthday_ids = await get_user_birthdays(self.current_date)
         self.nameday_ids = await get_user_namedays(self.names)
@@ -106,6 +121,15 @@ class TodayInfo:
                 list(map(lambda x: f"<@{x}>", self.nameday_ids))
             )
             message += f"\nSvátek mají lidové {nday_mentions}."
+        if self.beauty_members and write_beauty:
+            beaty_concat = concat_list(
+                list(map(
+                    lambda x: f"**{x.display_name}**",
+                    self.beauty_members
+                ))
+            )
+            message += f"\nDnes to sluší: {
+                beaty_concat} <:peepoCute:1333426880719753310>"
         # TODO: add fact
         return message
 
@@ -120,7 +144,10 @@ class TodayInfo:
 
     def get_evening_message(self):
         return self._get_daily_message(
+            # write_beauty=True,
             write_holidays=True,
-            write_fact=True,
+            # write_fact=True,
+            # write_birthdays=True,
+            # write_namedays=True,
         )
         pass

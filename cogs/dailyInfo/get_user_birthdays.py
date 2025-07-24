@@ -12,7 +12,10 @@ async def get_user_birthdays(date: date):
         )
         if "status" in today_birthdays:
             return []
+        return [int(row['id']) for row in today_birthdays]
+    except ValueError as e:
+        print(f'[VALUE-ERROR] get_user_birthdays: {e}')
+        return []
     except Exception as e:
         print(f'[ERROR] get_user_birthdays: {e}')
-        return
-    return [row['id'] for row in today_birthdays]
+        return []

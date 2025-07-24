@@ -39,6 +39,10 @@ def get_bot_prefix():
     return os.getenv('PREFIX')
 
 
+def get_guild_id():
+    return os.getenv('GUILD_ID')
+
+
 def get_channels():
     return {
         "general": os.getenv('MAIN_CHANNEL'),

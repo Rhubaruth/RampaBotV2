@@ -11,8 +11,11 @@ async def get_user_namedays(names: list[str]):
             if "status" in db_result:
                 continue
             today_namedays += db_result
-        pass
+
+        return [int(row['id']) for row in today_namedays]
+    except ValueError as e:
+        print(f'[VALUE-ERROR] get_user_namedays.py: {e}')
+        return []
     except Exception as e:
         print(f'[ERROR] get_user_namedays.py: {e}')
         return
-    return [row['id'] for row in today_namedays]

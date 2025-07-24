@@ -2,7 +2,7 @@ import datetime as dt
 from timeFunctions.CentralEuropeTime import CZECH_TIMEZONE
 from cogs.dailyInfo.TodayInfo import TodayInfo
 
-from loadEnv import MODERATOR_ROLES
+from loadEnv import MODERATOR_ROLES, get_guild_id
 
 from discord import Client, TextChannel
 from discord.ext import commands, tasks
@@ -15,9 +15,7 @@ EVENING_TIME = dt.time(hour=20, minute=00, tzinfo=CZECH_TIMEZONE)
 
 # Cog pro vytvoření tasků
 class DailyInfoCog(commands.Cog):
-    def __init__(self, bot):
-        self.Info: TodayInfo = TodayInfo()
-
+    def __init__(self, bot: Client):
         self.main_channel: TextChannel = None
         self.bot_channel: TextChannel = None
         self.is_testbot: bool = False
@@ -35,6 +33,16 @@ class DailyInfoCog(commands.Cog):
 
         self.main_channel = self.bot.get_channel(main_channel_id)
         self.bot_channel = self.bot.get_channel(bot_channel_id)
+
+        try:
+            guild_id = int(get_guild_id())
+            guild = await self.bot.fetch_guild(guild_id)
+        except ValueError as e:
+            print(
+                f'[VALUE-ERROR] In DailyInfoCog.cog_load {e}'
+            )
+            guild = None
+        self.Info: TodayInfo = TodayInfo(guild=guild)
 
         # Do not spam while debugging
         if main_channel_id == bot_channel_id:
@@ -60,6 +68,14 @@ class DailyInfoCog(commands.Cog):
     @tasks.loop(time=MIDNIGHT_TIME)
     async def at_midnight(self):
         datetime_now = dt.datetime.now(CZECH_TIMEZONE)
+
+        # # DEBUG: set date
+        # datetime_now = dt.datetime(
+        #     year=2025,
+        #     month=6,
+        #     day=29,
+        #     tzinfo=CZECH_TIMEZONE,
+        # )
         await self.Info.set_date(datetime_now.date())
 
     @tasks.loop(time=MORNING_TIME)

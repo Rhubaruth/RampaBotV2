@@ -12,5 +12,13 @@ GET->
 
 
 async def select_beauty_today():
+    """
+    Returns list of ids of random members
+    """
     response_json = await wrappers.get_async(url="Beauty")
-    return response_json
+    response_list = [
+        {"id": response_json["user_One"]},
+        {"id": response_json["user_Two"]},
+        {"id": response_json["user_Three"]},
+    ]
+    return response_list
