@@ -18,7 +18,7 @@ async def set_jmeniny(
     name: str,
 ) -> tuple[JmeninyError, str]:
     result = await select_daymonth_by_nameday(name)
-    if "status" in result:
+    if "status" in result and result['status'] != '200':
         return JmeninyError.NameNotFound, name
 
     db_entry = await select_user_by_id(user.id)
@@ -34,14 +34,12 @@ async def set_jmeniny(
     }
     if "first_Name" in db_entry:
         result = await update_user_by_id(user.id, data)
-        if "status" in result:
-            if result['status'] == '200':
-                return JmeninyError.OK, db_entry["first_Name"]
+        if "status" in result and result['status'] == '200':
+            return JmeninyError.OK, db_entry["first_Name"]
         return JmeninyError.UpdateError, str(result)
     else:
         result = await insert_user(data)
-        if "status" in result:
-            if result['status'] == '200':
-                return JmeninyError.OK, None
-        return JmeninyError.InsertError, str(result)
+        if "status" in result and result['status'] != '201':
+            return JmeninyError.InsertError, str(result)
+        return JmeninyError.OK, None
     return JmeninyError.OK, name

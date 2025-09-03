@@ -32,7 +32,6 @@ async def insert_user(data):
 
 
 async def update_user_by_id(id: int, data):
-    print(f'id: {id}, data: {data}')
     url = f"Users/Update/{id}"
     response_json = await wrappers.put_async(url, data)
     return response_json
