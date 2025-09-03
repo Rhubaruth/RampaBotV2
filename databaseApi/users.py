@@ -1,12 +1,4 @@
-import aiohttp
-
-from databaseApi import headers_config, ssl_config
-from loadEnv import URL_REST_API
-
 from databaseApi import wrappers
-
-# TODO: refactor -- create helper functions for api calls
-# -- wrapper_get & wrapper_post
 
 
 async def select_user_all():

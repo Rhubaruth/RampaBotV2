@@ -21,7 +21,11 @@ class UserCalendarCog(commands.Cog):
         name="svatek",
         description="Nastavení svátku uživatele"
     )
-    async def jmeniny(self, interaction: Interaction, name: str):
+    async def jmeniny(
+        self,
+        interaction: Interaction,
+        name: str,
+    ):
         user = interaction.user
         try:
             result, arg = await jmeniny.set_jmeniny(user, name)
@@ -35,8 +39,10 @@ class UserCalendarCog(commands.Cog):
             print("[Error] jmeniny@UserCalendar.py: ", {e})
             return
         message = ""
-        if result is JmeninyError.OK:
-            message = f"Jméno {user.mention} bylo nastaveno na **{arg}**."
+        if result is JmeninyError.OK and arg is None:
+            message = f"Jméno {user.mention} bylo nastaveno na **{name}**."
+        elif result is JmeninyError.OK:
+            message = f"Jméno {user.mention} bylo změněno z {arg} na **{name}**."
         elif result is JmeninyError.AlreadySet:
             message = f"Jméno {user.mention} už je nastaveno na **{arg}**."
         elif result is JmeninyError.NameNotFound:
