@@ -1,2 +1,4 @@
 # RampaBotV2
-Better, Faster, Stronger
+dependencies:
+- Python 3.14
+- libraries in requirements.txt
