@@ -27,6 +27,7 @@ class DailyInfoCog(commands.Cog):
 
     async def cog_load(self) -> None:
         from loadEnv import get_channels
+        print(f'[INFO] Loading DailyInfoCog')
         channels = get_channels()
         main_channel_id = int(channels["general"])
         bot_channel_id = int(channels["bot"])
@@ -57,6 +58,7 @@ class DailyInfoCog(commands.Cog):
 
         # for Debugg
         print(self.Info.print())
+        print(f'[INFO] DailyInfoCog - Success ')
 
     async def cog_unload(self) -> None:
         if self.is_testbot:

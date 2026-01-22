@@ -13,6 +13,8 @@ from helperFunction import concat_list, extract_column
 from typing import Union
 from discord import Member, Guild
 
+from loadEnv import get_roles
+
 
 class TodayInfo:
     def __init__(self, guild: Union[Guild, None]):
@@ -27,6 +29,8 @@ class TodayInfo:
         self.facts: list[str] = []
         self.birthday_ids: list[int] = []
         self.nameday_ids: list[int] = []
+
+        self.developer_role = get_roles()['dev']
 
     async def set_date(self, new_date: date):
         self.current_date = new_date
@@ -130,7 +134,17 @@ class TodayInfo:
             )
             message += f"\nDnes to sluší: {
                 beaty_concat} <:peepoCute:1333426880719753310>"
-        # TODO: add fact
+        if self.facts and write_fact:
+            facts_concat = concat_list(
+                list(map(lambda x: f"**{x}**", self.facts))
+            )
+            message += f"\n> {facts_concat}"
+
+        if self.error:
+            # TODO: send pm to DeveloperRole
+            message += f"\n-# <@&{self.developer_role}> to maj zas rozbitý."
+            print(f'[ERROR] TodayInfo: {self.error}')
+            pass
         return message
 
     def get_morning_message(self):
