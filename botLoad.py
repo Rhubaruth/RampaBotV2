@@ -11,7 +11,6 @@ def create_bot():
     intents.message_content = True
 
     prefix = get_bot_prefix()
-    print(f"PREFIX: {prefix}")
     bot = commands.Bot(command_prefix=prefix, intents=intents)
 
     # This is for the example purposes only, should only be used for debugging
@@ -33,5 +32,6 @@ def create_bot():
         # Sync commands
         await bot.tree.sync()
         print(f'Bot is online as {bot.user}')
+        print(f"PREFIX: {prefix}")
         print("Commands have been synced")
     return bot
