@@ -85,7 +85,7 @@ class DailyInfoCog(commands.Cog):
         message = self.Info.get_morning_message()
 
         if len(message) > 1:
-            await self.main_channel.send(message)
+            await self.main_channel.send(message, silent=True)
         return message
 
     @tasks.loop(time=EVENING_TIME)
@@ -93,7 +93,7 @@ class DailyInfoCog(commands.Cog):
         message = self.Info.get_evening_message()
 
         if len(message) > 1:
-            await self.main_channel.send(message)
+            await self.main_channel.send(message, silent=True)
         return message
 
     @commands.command(name="morning")
@@ -102,7 +102,6 @@ class DailyInfoCog(commands.Cog):
         await ctx.message.delete()
         message = await self.at_morning()
         print(message)
-        # await ctx.send(message)
 
     @commands.command(name="evening")
     @commands.has_any_role(*MODERATOR_ROLES)
@@ -110,7 +109,6 @@ class DailyInfoCog(commands.Cog):
         await ctx.message.delete()
         message = await self.at_evening()
         print(message)
-        # await ctx.send(message)
 
     @commands.command(name="print_info")
     @commands.has_any_role(*MODERATOR_ROLES)
